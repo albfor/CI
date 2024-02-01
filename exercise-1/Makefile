@@ -1,7 +1,7 @@
-run: default
+run: build
 	bin/main $(NUM)
 
-default: .mkbin .mkbuild build/main.o build/fizzbuzz.o
+build: .mkbin .mkbuild build/main.o build/fizzbuzz.o
 	g++ -o bin/main build/main.o build/fizzbuzz.o
 
 check: .mkbin .mkbuild build/test.o build/fizzbuzz.o build/unity.o

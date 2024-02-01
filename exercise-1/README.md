@@ -34,7 +34,7 @@ Write a Makefile without using variables, functions and pattern rules to build a
 make NUM=3
 ```
 
-Will compile and run fizzbuzz with NUM as the entered number.
+Will compile and run fizzbuzz with 3 as the user entered number.
 
 ```shell
 make check

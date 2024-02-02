@@ -1,10 +1,10 @@
 run: build
 	bin/main $(NUM)
 
-build: .mkbin .mkbuild build/main.o build/fizzbuzz.o
+build: .mkdirs build/main.o build/fizzbuzz.o
 	g++ -o bin/main build/main.o build/fizzbuzz.o
 
-check: .mkbin .mkbuild build/test.o build/fizzbuzz.o build/unity.o
+check: .mkdirs build/test.o build/fizzbuzz.o build/unity.o
 	g++ -o bin/test build/test.o build/fizzbuzz.o build/unity.o
 	bin/test
 
@@ -20,13 +20,9 @@ build/main.o: src/main.cpp lib/fizzbuzz/fizzbuzz.h
 build/fizzbuzz.o: lib/fizzbuzz/fizzbuzz.cpp
 	g++ -c -o build/fizzbuzz.o lib/fizzbuzz/fizzbuzz.cpp
 
-.mkbin:
-	mkdir -p bin
-
-.mkbuild:
-	mkdir -p build
+.mkdirs:
+	mkdir -p build bin
 
 clean:
-	rm -rf build
-	rm -rf bin
+	rm -rf build bin
 

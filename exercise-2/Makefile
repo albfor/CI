@@ -1,39 +1,39 @@
-CC := g++
+CC = g++
 
-CFLAG := -Wall -Wextra -g
+CFLAGS = -Wall -Wpedantic
 
-BUILD_DIR := build
-BIN_DIR := bin
-LIB_DIR := lib
-FIZZBUZZ := -I./$(LIB_DIR)/fizzbuzz
-UNITY := -I./$(LIB_DIR)/unity
+INC := $(addprefix -I./, $(wildcard lib/*))
 
-# All library cpp files 
-LIB := $(notdir $(wildcard $(LIB_DIR)/*/*.cpp))
-LIB_OBJS := $(LIB:%.cpp=$(BUILD_DIR)/%.o)
-APP_NAME := main
+OBJS = $(notdir $(shell find . -name *.cpp))
+OBJS := $(addprefix build/, $(OBJS:%.cpp=%.o))
 
-all: test bin
-	$(BIN_DIR)/$(APP_NAME) $(NUM)
+TEST_OBJS := $(filter-out build/main.o, $(OBJS))
+MAIN_OBJS := $(filter-out build/test.o build/unity.o, $(OBJS))
 
-bin: .mkdirs $(BUILD_DIR)/main.o $(BUILD_DIR)/fizzbuzz.o
-	$(CC) -o $(BIN_DIR)/$(APP_NAME) $(CFLAGS) $(BUILD_DIR)/$(APP_NAME).o $(BUILD_DIR)/fizzbuzz.o
 
-test: .mkdirs $(BUILD_DIR)/test.o $(LIB_OBJS)
-	$(CC) -o $(BIN_DIR)/test $(CFLAGS) $(BUILD_DIR)/test.o $(LIB_OBJS)
+run: .mkdirs bin/main
+	bin/main $(NUM)
 
-$(BUILD_DIR)/test.o: test/test.cpp
-	$(CC) -o $(BUILD_DIR)/test.o -c $(CFLAGS) $(FIZZBUZZ) $(UNITY) test/test.cpp
+test: .mkdirs bin/test
+	bin/test
 
-$(BUILD_DIR)/$(APP_NAME).o: src/$(APP_NAME).cpp 
-	$(CC) -o $(BUILD_DIR)/$(APP_NAME).o -c $(CFLAGS) $(FIZZBUZZ) src/$(APP_NAME).cpp
+bin/main: $(MAIN_OBJS)
+	$(CC) -o bin/main $^
 
-# Makes .o files for all cpp files in lib/
-$(BUILD_DIR)/%.o: $(LIB_DIR)/*/%.cpp
-	$(CC) -o $@ -c $(CFLAGS) $^
+bin/test: $(TEST_OBJS)
+	$(CC) -o bin/test $^
+
+build/main.o: src/main.cpp 
+	$(CC) -c -o $@ $^ $(INC) 
+
+build/test.o: test/test.cpp 
+	$(CC) -c -o $@ $^ $(INC) 
+
+build/%.o: lib/*/%.cpp
+	$(CC) -c -o $@ $^ $(INC)
 
 .mkdirs:
-	mkdir -p $(BUILD_DIR) $(BIN_DIR)
+	mkdir -p bin build
 
 clean:
-	rm -rf $(BUILD_DIR) $(BIN_DIR)
+	rm -rf bin build

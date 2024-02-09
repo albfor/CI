@@ -1,13 +1,14 @@
 CC = g++
-
-CFLAGS = -Wall -Wpedantic
+CFLAGS = -Wall -MMD
 
 INC := $(addprefix -I./, $(wildcard lib/*))
-
-OBJS = $(notdir $(shell find . -name *.cpp))
-OBJS := $(addprefix build/, $(OBJS:%.cpp=%.o))
-
+# find all cpp files
+SRCS = $(notdir $(shell find . -name *.cpp))
+# convert them to build/%.o 
+OBJS := $(SRCS:%.cpp=build/%.o)
+# test isn't depending on main
 TEST_OBJS := $(filter-out build/main.o, $(OBJS))
+# main isn't depending on test & unity
 MAIN_OBJS := $(filter-out build/test.o build/unity.o, $(OBJS))
 
 run: .mkdirs bin/main
@@ -17,19 +18,21 @@ test: .mkdirs bin/test
 	bin/test
 
 bin/main: $(MAIN_OBJS)
-	$(CC) $(CFLAGS) -o bin/main $^
+	$(CC) -o bin/main $^
 
 bin/test: $(TEST_OBJS)
-	$(CC) $(CFLAGS) -o bin/test $^
+	$(CC) -o bin/test $^
 
-build/main.o: src/main.cpp 
-	$(CC) $(CFLAGS) -c -o $@ $^ $(INC)
+build/main.o: src/main.cpp
+	$(CC) $(CFLAGS)  -c -o $@ $< $(INC)
 
 build/test.o: test/test.cpp 
-	$(CC) $(CFLAGS) -c -o $@ $^ $(INC)
+	$(CC) $(CFLAGS)  -c -o $@ $< $(INC)
 
 build/%.o: lib/*/%.cpp
-	$(CC) $(CFLAGS) -c -o $@ $^ $(INC)
+	$(CC) $(CFLAGS)  -c -o $@ $< $(INC)
+
+-include $(OBJS:.o=.d)
 
 .mkdirs:
 	mkdir -p bin build

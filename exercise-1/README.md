@@ -19,26 +19,27 @@ Source: <https://en.wikipedia.org/wiki/Fizz_buzz>
 
 ## Exercise
 
-Write a Makefile without using variables, functions and pattern rules to build and run the main and the test programs.
+Write a Makefile without using variables, functions and pattern rules to build
+and run the main and the test programs.
 
 1. There shall be a rule to clean the project.
 2. The generated files shall be stored in a directory named build.
 3. There shall be a target named run to build and run the main program
-    * A integer number in the range of 1 and 255 shall be passed to the program as an argument.
+    * A integer number in the range of 1 and 255 shall be passed to the
+    program as an argument.
         * E.g. `make run NUM=123`
 4. There shall be a target named **check** to build and run the test.
 
 ## To Run
 
+To compile and run fizzbuzz with 3 as the user entered number.
+
 ```shell
 make NUM=3
 ```
 
-Will compile and run fizzbuzz with 3 as the user entered number.
+To compile and run the tests.
 
 ```shell
 make check
 ```
-
-Will compile and run the tests.
-

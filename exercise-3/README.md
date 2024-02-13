@@ -1,13 +1,18 @@
 # Exercise 3
 
-## Build & Run 
+A simple greeter made to test gtest and cmake.
+
+## Build & Run
 
 ```shell
 cmake -S . -B build
 ```
+
 ```shell
 cmake --build build
 ```
+
 ```shell
 build/main
 ```
+
